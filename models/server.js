@@ -26,11 +26,17 @@ export class Server {
     }
 
     setVerbs(apiController){
-        const api = new apiController();
+        let api = apiController;
+        try{
+            api = new apiController();
+        }catch (e){
+            console.clear(); 
+            console.log(api);
+        }
         let verbs =["post","put","delete","get"];
         for(let verb of verbs){
             this.app[verb](api.path,(req,res)=>{
-                api[verb](req,res)
+                api[verb]?.(req,res)??res.status(404).json(["not found"])
             });
         }
     }
